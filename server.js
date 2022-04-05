@@ -20,7 +20,7 @@ app.use(express.urlencoded({extended: false}))
 
 // Handling GET requests coming to our app by serving from the root directory.
 app.get('/', (req, res) => {
-    res.render('index.ejs', { name: req.user.name })
+    res.render('index.ejs')
 })
 
 // Adding a route to serve the login page.
@@ -36,9 +36,10 @@ app.get('/register', (req, res) => {
 // Adding a new route from the login page to deal with incoming data.
 app.post('/login', (req, res)=> {
     // TODO continue working on the password login logic
-    if(req.body.email, ){
-
+    if(beginPasswordAuth(req.body.email)){
+        res.redirect('/')
     }
+   
 })
 
 // Adding a new route from the register page to deal with incoming data.
