@@ -6,7 +6,7 @@ const app = express()
 const bcrypt = require('bcrypt')
 
 // Requiring password login logic.
-const passwordAuth = require('./password-login')
+const passwordController = require('./password-login')
 
 //TODO Replace this users array with a connection to the database.
 // Local variable to store users.
@@ -34,7 +34,7 @@ app.get('/register', (req, res) => {
 })
 
 // Adding a new route from the login page to deal with incoming data.
-app.post('/login', (req, res)=> {
+/*app.post('/login', async (req, res)=> {
     // TODO continue working on the password login logic
     if(passwordAuth.startPasswordAuth(req.body.email)){
         console.log('It is comming home!')
@@ -44,7 +44,8 @@ app.post('/login', (req, res)=> {
         res.redirect('/login')
     }
    
-})
+})*/
+app.post('/login', passwordController.passwordAuth)
 
 // Adding a new route from the register page to deal with incoming data.
 app.post('/register', async (req, res)=> {

@@ -9,11 +9,12 @@ con.connect((err) => {
     }
 })
 function getUserByEmail(email){
-  con.query(`SELECT email FROM users WHERE users.email = '${email}'`, (err, results, fields) => {
+  con.query(`SELECT email FROM users WHERE users.email = ?`, [email], async (err, results, fields) => {
     if (err){
       console.log(err, 'something happened')
       return false
-    } else {
+    } 
+    
       if(results && results.length>0){
         console.log('Found user email in DB ', results[0].email)
         return true
@@ -21,8 +22,6 @@ function getUserByEmail(email){
         console.log('DID NOT Find user email in DB ')
         return false
       }
-      return false
-    }
   })
 }
 
