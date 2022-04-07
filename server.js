@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 
 // Adding a route to serve the login page.
 app.get('/login', (req, res) => {
-    res.render('login.ejs')
+    res.render('login.ejs',{messages:''})
 })
 
 // Adding a route to serve the login page.
