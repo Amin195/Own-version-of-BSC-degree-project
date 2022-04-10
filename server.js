@@ -5,10 +5,12 @@ const app = express()
 //Requiring bcrypt that will be used for hashing the passwords
 const bcrypt = require('bcrypt')
 
+// JavaScript library in order to read data from POST requests on our server.
+const bodyParser = require('body-parser')
+
 // Requiring password login logic.
 const passwordController = require('./password-login')
 
-//TODO Replace this users array with a connection to the database.
 // Local variable to store users.
 const users =[]
 
@@ -17,6 +19,10 @@ app.set('view-engine', 'ejs')
 
 // Use this to be able to access the values from the HTML login forms.
 app.use(express.urlencoded({extended: false}))
+// Using static to serve client scripts and CSS from public directory.
+app.use(express.static('public'))
+// Used to be able to parse JSON requests from a client.
+app.use(bodyParser.json())
 
 // Handling GET requests coming to our app by serving from the root directory.
 app.get('/', (req, res) => {
@@ -34,18 +40,13 @@ app.get('/register', (req, res) => {
 })
 
 // Adding a new route from the login page to deal with incoming data.
-/*app.post('/login', async (req, res)=> {
-    // TODO continue working on the password login logic
-    if(passwordAuth.startPasswordAuth(req.body.email)){
-        console.log('It is comming home!')
-        res.redirect('/')
-    }else{
-        console.log('IS IT COMING TO THIS ELS STATEMENT!!!!')
-        res.redirect('/login')
-    }
-   
-})*/
 app.post('/login', passwordController.passwordAuth)
+
+// Added a route to handle fingerprinting requests. This can be turned into a route to handle all post methods from the client. 
+// If there is anything they want to send in the background.
+app.post('/fp', async (req, res)=> {
+    console.log('User fingerprint: ',req.body.fingerprintJS)
+})
 
 // Adding a new route from the register page to deal with incoming data.
 app.post('/register', async (req, res)=> {

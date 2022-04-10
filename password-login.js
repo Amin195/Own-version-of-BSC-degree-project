@@ -16,6 +16,7 @@ con.connect((err) => {
 })
 
 exports.passwordAuth = (req, res) => {
+    //console.log('this is the response: \n', req)
     console.log(req.body)
     const email = req.body.email
     const password = req.body.password
