@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 //const mysql = require('./db-manager')
 const mysql = require('mysql')
 
-const con = mysql.createConnection({ host: 'localhost', user: 'root1', password: '0936954', database: 'snowbeez', port: 3306 })
+const con = mysql.createConnection({ host: 'localhost', user: 'root', password: 'AJnuHA^8VKHht=uB', database: 'snowbeez', port: 3306 })
 
 const messages = {
     invalidEmail: 'Invalid email'
@@ -32,6 +32,7 @@ exports.passwordAuth = (req, res) => {
                 if (await bcrypt.compare(password, results[0].pass)) {
                     return res.redirect('/')
                 } else {
+                    console.log("Here Dillon", password, results[0].pass)
                   return res.render('./login.ejs', {messages: 'Wrong password'})
                 }
               } catch (e) {

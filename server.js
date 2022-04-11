@@ -14,6 +14,9 @@ const passwordController = require('./password-login')
 // Local variable to store users.
 const users =[]
 
+// Requiring graphical loging logic
+const graphicalManager = require('./graphicalManager')
+
 // Setting the rendering engine to ejs
 app.set('view-engine', 'ejs')
 
@@ -38,6 +41,14 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register.ejs')
 })
+
+// Adding a route to serve the graphical testing page.
+app.get('/graphical', (req, res) => {
+    res.render('graphical.ejs')
+})
+
+// Adding a route to handle new graphical testing
+app.post('/graphical', graphicalManager.checkPictures)
 
 // Adding a new route from the login page to deal with incoming data.
 app.post('/login', passwordController.passwordAuth)

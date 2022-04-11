@@ -1,6 +1,6 @@
 const  mysql = require('mysql')
 
-const con = mysql.createConnection({ host: 'localhost', user: 'root1', password: '0936954', database: 'snowbeez', port: 3306})
+const con = mysql.createConnection({ host: 'localhost', user: 'root', password: 'AJnuHA^8VKHht=uB', database: 'snowbeez', port: 3306})
 
 con.connect((err) => {
     if (err) console.log('bad luck - no connection' + err)
