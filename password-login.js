@@ -4,6 +4,8 @@ const mysql = require('mysql')
 
 const con = mysql.createConnection({ host: 'localhost', user: 'root1', password: '0936954', database: 'snowbeez', port: 3306 })
 
+let fp = null
+
 const messages = {
     invalidEmail: 'Invalid email'
 
@@ -29,8 +31,15 @@ exports.passwordAuth = (req, res) => {
             console.log('These are the results from the DB ',results)
             console.log('Found user email in DB ', results[0].email)
             try {
+                // Check if passwords match. 
                 if (await bcrypt.compare(password, results[0].pass)) {
-                    return res.redirect('/')
+                    // Check if the fingerprint in the database matches the collected one.
+                    if(results[0].dbFingerprint === fp){
+                        return res.redirect('/')
+                    } else {
+                        return res.render('./login.ejs', {messages: 'Fingerprints do not match'})
+                    }
+                    
                 } else {
                   return res.render('./login.ejs', {messages: 'Wrong password'})
                 }
@@ -45,6 +54,11 @@ exports.passwordAuth = (req, res) => {
     })
 }
 
+exports.fingerprintAuth = (req, res) => {
+    fp = req.body.fingerprintJS
+    console.log('The fingerprint collected: ', fp)
+    res.status(200)
+}
 async function startPasswordAuth(email, enteredHashedPass) {
     // Check if email is registered
     if (mysql.getUserByEmail(email)) {
