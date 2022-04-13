@@ -2,6 +2,9 @@ const bcrypt = require('bcrypt')
 //const mysql = require('./db-manager')
 const mysql = require('mysql')
 
+// Import the module responsible for sending emails
+const secondChannel = require('./second-channel')
+
 const con = mysql.createConnection({ host: 'localhost', user: 'root1', password: '0936954', database: 'snowbeez', port: 3306 })
 
 let fp = null
@@ -37,6 +40,7 @@ exports.passwordAuth = (req, res) => {
                     if(results[0].dbFingerprint === fp){
                         return res.redirect('/')
                     } else {
+                        secondChannel.sendEmail('amin.marteni@gmail.com', 'You have received this email because you recently tried logging in to your sonwbeeZ account but your device/browser have changed')
                         return res.render('./login.ejs', {messages: 'Fingerprints do not match'})
                     }
                     
