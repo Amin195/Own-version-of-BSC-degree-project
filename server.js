@@ -47,14 +47,10 @@ app.get('/graphical', (req, res) => {
     res.render('graphical.ejs')
 })
 
-app.post('/graphical', async (req, res) => {
-    console.log('User graphical: ',req.body.paswordNumbers)
-})
-
 // Adding a route to handle new graphical testing
 // app.post('/graphical', graphicalManager.checkPictures)
 app.post('/gp', async (req, res)=> {
-    console.log('User graphical: ',req.body.paswordNumbers)
+    console.log('User graphical2: ',req.body)
 })
 
 
