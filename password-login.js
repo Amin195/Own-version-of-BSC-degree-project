@@ -31,29 +31,32 @@ exports.passwordAuth = (req, res) => {
         }
 
         if (results.length > 0) {
-            console.log('These are the results from the DB ',results)
+            console.log('These are the results from the DB ', results)
             console.log('Found user email in DB ', results[0].email)
             try {
                 // Check if passwords match. 
                 if (await bcrypt.compare(password, results[0].pass)) {
                     // Check if the fingerprint in the database matches the collected one.
-                    if(results[0].dbFingerprint === fp){
-                        return res.redirect('/')
-                    } else {
-                        secondChannel.sendEmail('amin.marteni@gmail.com', 'You have received this email because you recently tried logging in to your sonwbeeZ account but your device/browser have changed')
-                        return res.render('./login.ejs', {messages: 'Fingerprints do not match'})
+                    for (let i = 0; i < results.length; i++) {
+                        if (results[i].dbFingerprint === fp) {
+                            return res.redirect('/')
+                        }
                     }
-                    
+
+                    secondChannel.sendEmail('amin.marteni@gmail.com', 'You have received this email because you recently tried logging in to your sonwbeeZ account but your device/browser have changed')
+                    return res.render('./login.ejs', { messages: 'Fingerprints do not match' })
+
+
                 } else {
-                  return res.render('./login.ejs', {messages: 'Wrong password'})
+                    return res.render('./login.ejs', { messages: 'Wrong password' })
                 }
-              } catch (e) {
+            } catch (e) {
                 console.log(e)
                 return res.status(500).send('an Error happened when checking password hashes')
-              }
+            }
         } else {
             console.log('DID NOT Find user email in DB ')
-            return res.render('./login.ejs', {messages: 'Invalid email'})
+            return res.render('./login.ejs', { messages: 'Invalid email' })
         }
     })
 }
