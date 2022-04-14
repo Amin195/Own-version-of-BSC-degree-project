@@ -10,6 +10,8 @@ const bodyParser = require('body-parser')
 
 // Requiring password login logic.
 const passwordController = require('./password-login')
+// Requiring fingerprint login logic.
+//const fingerprintController = require('./fingerprint-auth')
 
 // Local variable to store users.
 const users =[]
@@ -44,9 +46,7 @@ app.post('/login', passwordController.passwordAuth)
 
 // Added a route to handle fingerprinting requests. This can be turned into a route to handle all post methods from the client. 
 // If there is anything they want to send in the background.
-app.post('/fp', async (req, res)=> {
-    console.log('User fingerprint: ',req.body.fingerprintJS)
-})
+app.post('/fp', passwordController.fingerprintAuth)
 
 // Adding a new route from the register page to deal with incoming data.
 app.post('/register', async (req, res)=> {
