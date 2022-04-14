@@ -39,6 +39,7 @@ exports.passwordAuth = (req, res) => {
                     // Check if the fingerprint in the database matches the collected one.
                     for (let i = 0; i < results.length; i++) {
                         if (results[i].dbFingerprint === fp) {
+                            // Call for graphical.. 
                             return res.redirect('/')
                         }
                     }
@@ -65,29 +66,4 @@ exports.fingerprintAuth = (req, res) => {
     fp = req.body.fingerprintJS
     console.log('The fingerprint collected: ', fp)
     res.status(200)
-}
-async function startPasswordAuth(email, enteredHashedPass) {
-    // Check if email is registered
-    if (mysql.getUserByEmail(email)) {
-        // If user is registered check passwords and return boolean and a message maybe by returning a function.
-        console.log('FOUND IT!')
-        return true
-    } else {
-        console.log('DID NOT FOUND IT!')
-        return false
-    }
-
-}
-// This probably be returned to the server.js and contains status of the authentication and a message.
-function done(success, { }) {
-
-}
-
-// This function will check the database for the passwords and see if they match.
-async function passwordMatch(enteredHashedPass) {
-    const storedPassword = null // Get it from Database
-    if (await bcrypt.compare(storedPassword, enteredHashedPass)) {
-        return true
-    }
-
 }
