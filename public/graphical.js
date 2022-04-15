@@ -1,7 +1,8 @@
 // https://stackoverflow.com/questions/58892097/how-to-make-an-image-selection-with-ejs-and-express
 
 
-const allPics = document.getElementById("pictures") 
+const allPics = document.getElementById("pictures")
+const sendbtn = document.getElementById("sendGp") 
 var numberOfPicsSelected = 0 //to check when hit 4 selected
 var paswordNumbers = [] //array for selected id
 
@@ -20,8 +21,13 @@ allPics.addEventListener('click', (e) => {
     }
     
     console.log("number of Selected: ", numberOfPicsSelected)
-    if(numberOfPicsSelected===4){postGP('http://localhost:3000/gp', {paswordNumbers})}
+    // if(numberOfPicsSelected===4){postGP('http://localhost:3000/gp', {paswordNumbers})}
   });
+
+//need to add some more logic for sending less or more images? 
+  sendbtn.addEventListener('click', async () => {
+    await postGP('http://localhost:3000/gp', {paswordNumbers: paswordNumbers})
+  })
 
 // overcomplicated removal for a selection
 function removeSelection(id){
@@ -53,15 +59,3 @@ async function postGP(url, body) {
 
     return response
 }
-
-
-
-
-// console.log('allkids: ',allPics.addEventListener('click', console.log('wow so good')))
-// allPics.addEventListener('click', (e) => {
-//     console.log(this)
-// })
-
-// checkPictures = (req, res) => {
-//     console.log('got in check Pictures Gm')
-// }

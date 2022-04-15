@@ -16,9 +16,6 @@ const passwordController = require('./password-login')
 // Local variable to store users.
 const users =[]
 
-// Requiring graphical loging logic
-const graphicalManager = require('./graphicalManager')
-
 // Setting the rendering engine to ejs
 app.set('view-engine', 'ejs')
 
@@ -49,11 +46,16 @@ app.get('/graphical', (req, res) => {
     res.render('graphical.ejs')
 })
 
+app.get('/gp',  (req, res) => {
+    res.render('index.ejs')
+})
+
 // Adding a route to handle new graphical testing
 // app.post('/graphical', graphicalManager.checkPictures)
-app.post('/gp', async (req, res)=> {
-    console.log('User graphical2: ',req.body)
-})
+app.post('/gp', passwordController.graphicalAuth)
+// app.post('/gp', async (req, res)=> {
+//     console.log('User graphical2: ',req.body)
+// })
 
 
 // Adding a new route from the login page to deal with incoming data.
@@ -70,6 +72,7 @@ app.post('/register', async (req, res)=> {
         // req.body.password is getting the body of the POST request the contains password input we then await hashing.
         // password is the name attribute in the HTML
         const hashedPassword = await bcrypt.hash (req.body.password, 10)
+        console.log(hashedPassword)
         // Adding the user to the users array. 
         // TODO replace this with adding user to DB. Also maybe add a user ID
         users.push({
