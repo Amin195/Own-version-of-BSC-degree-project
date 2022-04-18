@@ -71,7 +71,7 @@ exports.passwordAuth = (req, res) => {
 exports.fingerprintAuth = (req, res) => {
     fp = req.body.fingerprintJS
     console.log('The fingerprint collected: ', fp)
-    res.status(500)
+    res.status(200)
 }
 
 exports.graphicalAuth = async (req, res) => {
