@@ -71,54 +71,58 @@ exports.passwordAuth = (req, res) => {
 exports.fingerprintAuth = (req, res) => {
     fp = req.body.fingerprintJS
     console.log('The fingerprint collected: ', fp)
-    res.status(200)
+    res.status(500)
 }
 
 exports.graphicalAuth = async (req, res) => {
     temp = req.body.paswordNumbers
     temp2 = ""
+    console.log("the RWQ", req)
     temp.forEach(element => {
         temp2 += element
     });
     gp = temp2
-    //console.log('returning graphicalAuth', req.body.paswordNumbers)
+    console.log('returning graphicalAuth', req.body.paswordNumbers)
     console.log('graphicalCheckDB userGp:', gp)
     console.log('sweetword1:', sweetWordOne)
     console.log('sweetword2:', sweetWordTwo)
-    let sweetword = null 
-    if (await bcrypt.compare(gp, sweetWordOne)) {
-        console.log('mattching sweetword one!!!')
-        sweetword = 'sweetWordOne'
-    }else if(await bcrypt.compare(gp, sweetWordTwo)){
-        console.log('mattching sweetword Two!!!')
-        sweetword = 'sweetWordTwo'
-    }else{
-        console.log('No Matching sweewords')
-    }
+    let sweetword = null
+
     // try{
-        con.query(`SELECT * FROM honeychecker WHERE honeychecker.user = ?`, [email], async (err, results) => {
-            if (err) {
-                console.log(err, 'something happened in graphical checking ERROR')
+    con.query(`SELECT * FROM honeychecker WHERE honeychecker.user = ?`, [email], async (err, results) => {
+        if (await bcrypt.compare(gp, sweetWordOne)) {
+            console.log('mattching sweetword one!!!')
+            sweetword = 'sweetWordOne'
+        } else if (await bcrypt.compare(gp, sweetWordTwo)) {
+            console.log('mattching sweetword Two!!!')
+            sweetword = 'sweetWordTwo'
+        } else {
+            console.log('No Matching sweewords')
+        }
+        if (err) {
+            console.log(err, 'something happened in graphical checking ERROR')
+        }
+        if (results.length > 0) {
+            console.log(results)
+            console.log('SW: ', results[0].correctSW)
+            if (results[0].correctSW === sweetword) {
+                console.log('screaming found')
+                //log in here
+                // return res.redirect('/')
+                // res.send('baoncd afdsahjk')
+                return res.redirect('/')
+            } else {
+                console.log('from DB: ', results[0].correctSW, 'From here', sweetword)
+                console.log('no results found for that user?')
+                //honeytoken alert
+                return res.redirect('/login')
             }
-            if (results.length > 0) {
-                console.log(results)
-                console.log('SW: ', results[0].correctSW)
-                if(results[0].correctSW === sweetword){
-                    console.log('screaming found')
-                    //log in here
-                    return res.redirect('/')
-                }else{
-                    console.log('from DB: ', results[0].correctSW, 'From here', sweetword)
-                    console.log('no results found for that user?')
-                    //honeytoken alert
-                    return res.redirect('./login')
-                }
-            }else {
-                //incorrect GP
-                console.log('DID NOT Find any Results in DB GP')
-                //return res.render('./login.ejs', { messages: 'Invalid email' })
-            }
-        })
+        } else {
+            //incorrect GP
+            console.log('DID NOT Find any Results in DB GP')
+            //return res.render('./login.ejs', { messages: 'Invalid email' })
+        }
+    })
     // }catch (e){
     //     console.log(e)
     //     return res.status(500).send('an Error happened when checking graphical hashes')
@@ -126,8 +130,3 @@ exports.graphicalAuth = async (req, res) => {
 
     //res.status(200)
 }
-
-// async function graphicalCheckDB(userGp){
-    
-// }
-

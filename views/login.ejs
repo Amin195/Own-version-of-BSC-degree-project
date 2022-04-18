@@ -40,7 +40,7 @@
             }
             console.log('the data being posted to, ', url, 'is the following: ', data)
             const response = await fetch(url, data)
-
+            console.log('Response in fp thing',response)
             if (!response.ok) {
                 const data = await response.json()
 

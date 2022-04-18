@@ -46,17 +46,12 @@ app.get('/graphical', (req, res) => {
     res.render('graphical.ejs')
 })
 
-app.get('/gp',  (req, res) => {
-    res.render('index.ejs')
-})
-
-// Adding a route to handle new graphical testing
-// app.post('/graphical', graphicalManager.checkPictures)
-app.post('/gp', passwordController.graphicalAuth)
-// app.post('/gp', async (req, res)=> {
-//     console.log('User graphical2: ',req.body)
+// app.get('/gp',  (req, res) => {
+//     res.render('index.ejs')
 // })
 
+// app.post('/graphical', graphicalManager.checkPictures)
+app.post('/graphical', passwordController.graphicalAuth)
 
 // Adding a new route from the login page to deal with incoming data.
 app.post('/login', passwordController.passwordAuth)

@@ -53,7 +53,7 @@ async function postFP(url, body) {
     }
     console.log('the data being posted to, ', url, 'is the following: ', data)
     const response = await fetch(url, data)
-
+    console.log('THIS IS THE RESPOSE FP', response) // this never happens for some reason? 
     if (!response.ok) {
         const data = await response.json()
 
