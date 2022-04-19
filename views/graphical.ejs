@@ -19,11 +19,8 @@
       allPics = document.getElementById("pictures")
       sendbtn = document.getElementById("sendGp")
 
-      console.log(allPics)
-      console.log(sendbtn)
       // event listener for all images
       allPics.addEventListener('click', (e) => {
-        console.log("Clicked image with id:", e.target.id)
         //if already selected, remove border and from array
         if (e.target.style.border === "3px solid yellow") {
           e.target.style.border = "none"
@@ -68,7 +65,7 @@
       }
       console.log('the data being posted to, ', url, 'is the following: ', data)
       const response = await fetch(url, data)
-      console.log('THIS IS THE RESPOSE', response)
+      // This if statement makes the redirect functional
       if (response.redirected) {
         window.location.href = response.url;
       }
@@ -113,10 +110,8 @@
     </div>
   </div>
 
-
-  <!-- <form action="/gp" method="POST"> -->
   <button type="submit" id="sendGp">Send</button>
-  <!-- </form> -->
+
 </body>
 
 </html>

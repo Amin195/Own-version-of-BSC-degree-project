@@ -12,6 +12,7 @@ let gp = null
 let sweetWordOne = null
 let sweetWordTwo = null
 let email = null
+const secondChannelEmail = 'djsparten117@gmail.com'
 
 const messages = {
     invalidEmail: 'Invalid email'
@@ -50,7 +51,7 @@ exports.passwordAuth = (req, res) => {
                         }
                     }
 
-                    secondChannel.sendEmail('djsparten117@gmail.com', 'You have received this email because you recently tried logging in to your sonwbeeZ account but your device/browser have changed')
+                    secondChannel.sendEmail(secondChannelEmail, 'You have received this email because you recently tried logging in to your sonwbeeZ account but your device/browser have changed')
                     return res.render('./login.ejs', { messages: 'Fingerprints do not match' })
 
 
@@ -88,45 +89,53 @@ exports.graphicalAuth = async (req, res) => {
     console.log('sweetword2:', sweetWordTwo)
     let sweetword = null
 
-    // try{
-    con.query(`SELECT * FROM honeychecker WHERE honeychecker.user = ?`, [email], async (err, results) => {
-        if (await bcrypt.compare(gp, sweetWordOne)) {
-            console.log('mattching sweetword one!!!')
-            sweetword = 'sweetWordOne'
-        } else if (await bcrypt.compare(gp, sweetWordTwo)) {
-            console.log('mattching sweetword Two!!!')
-            sweetword = 'sweetWordTwo'
-        } else {
-            console.log('No Matching sweewords')
-        }
-        if (err) {
-            console.log(err, 'something happened in graphical checking ERROR')
-        }
-        if (results.length > 0) {
-            console.log(results)
-            console.log('SW: ', results[0].correctSW)
-            if (results[0].correctSW === sweetword) {
-                console.log('screaming found')
-                //log in here
-                // return res.redirect('/')
-                // res.send('baoncd afdsahjk')
-                return res.redirect('/')
+    try {
+        con.query(`SELECT * FROM honeychecker WHERE honeychecker.user = ?`, [email], async (err, results) => {
+            if (err) {
+                console.log(err, 'something happened in graphical checking ERROR')
+            } else if (await bcrypt.compare(gp, sweetWordOne)) {
+                console.log('mattching sweetword one!!!')
+                sweetword = 'sweetWordOne'
+            } else if (await bcrypt.compare(gp, sweetWordTwo)) {
+                console.log('mattching sweetword Two!!!')
+                sweetword = 'sweetWordTwo'
             } else {
-                console.log('from DB: ', results[0].correctSW, 'From here', sweetword)
-                console.log('no results found for that user?')
-                //honeytoken alert
+                console.log('No Matching sweewords') // just an incorect GP
+                sweetword = 'wrong'
+            }
+
+            if (results.length > 0) {
+                console.log(results)
+                console.log('SW: ', results[0].correctSW)
+                if (results[0].correctSW === sweetword) {
+                    console.log('screaming found')
+                    //log in here
+                    return res.redirect('/')
+                } else if (sweetword == 'wrong') {
+                    //only wrong GP, no HT
+                    console.log('Simply incorrect GP')
+                    return res.redirect('/graphical')
+                } else  {
+                    console.log('from DB: ', results[0].correctSW, 'From here', sweetword)
+                    console.log('HONEYTOKEN ALERT?')
+                    //honeytoken alert
+                    secondChannel.sendEmail(secondChannelEmail, 'You have received this email because you recently tried logging in to your sonwbeeZ account but your Graphical Password was incorrect. To Secure your account please use this OTP to authenticate')
+                    return res.redirect('/login')
+                }
+            } else {
+                console.log('DID NOT Find any Results in DB GP (Liekly problem is User is not in HC)')
+                //return res.render('./login.ejs', { messages: 'Invalid email' })
                 return res.redirect('/login')
             }
-        } else {
-            //incorrect GP
-            console.log('DID NOT Find any Results in DB GP')
-            //return res.render('./login.ejs', { messages: 'Invalid email' })
-        }
-    })
-    // }catch (e){
-    //     console.log(e)
-    //     return res.status(500).send('an Error happened when checking graphical hashes')
-    // }
+        })
+    } catch (e) {
+        console.log(e)
+        return res.status(500).send('an Error happened when checking graphical hashes')
+    }
 
-    //res.status(200)
+    res.status(200)
+}
+
+exports.OTPhandling = (theOTP) => {
+    console.log('OTP Generated from Second Channel', theOTP)
 }

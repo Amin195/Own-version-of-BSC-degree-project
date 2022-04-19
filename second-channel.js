@@ -1,28 +1,55 @@
 const nodemailer = require('nodemailer')
 
+const passwordController = require('./password-login')
+
 // If we face trouble using GMAIL we should check here for fixes https://nodemailer.com/usage/using-gmail/
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'snowbeez.2fa@gmail.com',
-      pass: 'snowbeeZ1234'
-    }
-  });
-  
+  service: 'gmail',
+  auth: {
+    user: 'snowbeez.2fa@gmail.com',
+    pass: 'snowbeeZ1234'
+  }
+});
+
 exports.sendEmail = (receiver, message) => {
   var mailOptions = {
     from: 'snowbeez.2fa@gmail.com',
     to: receiver,
     subject: 'New authentication attempt to your snowbeeZ account',
-    text: message
+    text: message + 'Please log in with this Graphical Password or your account may be locked (Select the images in order): ' + generateOTP()
   };
-  
-  transporter.sendMail(mailOptions, function(error, info){
+
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error)
     } else {
       console.log('Email sent: ' + info.response)
     }
   })
+}
+
+function generateOTP() {
+  var newOTP = []
+  //var idList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+  var idList = ['Monitor', 'Basket Ball', 'Lantern', 'Top Hat', 'Battery', 'Dirt Block', 'Eagle', 'Anchor', 'Brick Wall', 'House', 'Chest', 'Pineapple', 'Wooden Crate', 'White Alien Standing', 'Brown Golem', 'Hexagonal Emerald',]
+  for (let i = 0; i < 4; i++) {
+    var theid = idList[Math.floor(Math.random() * idList.length)]
+
+    // overcomplicated removing
+    for (let k = 0; k < idList.length; k++) {
+      if (idList[k] === theid) {
+        idList.splice(k, 1)
+      }
+    }
+    newOTP.push(theid)
+  }
+  var orderList = ['Monitor', 'Basket Ball', 'Lantern', 'Top Hat', 'Battery', 'Dirt Block', 'Eagle', 'Anchor', 'Brick Wall', 'House', 'Chest', 'Pineapple', 'Wooden Crate', 'White Alien Standing', 'Brown Golem', 'Hexagonal Emerald',]
+  var newOTPnumbers = []
+  for (let k = 0; k < newOTP.length; k++) {
+    var temp = orderList.indexOf(newOTP[k])
+    newOTPnumbers.push(temp)
+  }
+  passwordController.OTPhandling(newOTPnumbers)
+  return newOTP
 }
