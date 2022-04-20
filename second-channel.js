@@ -17,7 +17,7 @@ exports.sendEmail = (receiver, message) => {
     from: 'snowbeez.2fa@gmail.com',
     to: receiver,
     subject: 'New authentication attempt to your snowbeeZ account',
-    text: message + 'Please log in with this Graphical Password or your account may be locked (Select the images in order): ' + generateOTP()
+    text: message
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
@@ -29,7 +29,7 @@ exports.sendEmail = (receiver, message) => {
   })
 }
 
-function generateOTP() {
+exports.generateOTP = () =>  {
   var newOTP = []
   //var idList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
   var idList = ['Monitor', 'Basket Ball', 'Lantern', 'Top Hat', 'Battery', 'Dirt Block', 'Eagle', 'Anchor', 'Brick Wall', 'House', 'Chest', 'Pineapple', 'Wooden Crate', 'White Alien Standing', 'Brown Golem', 'Hexagonal Emerald',]
@@ -44,12 +44,6 @@ function generateOTP() {
     }
     newOTP.push(theid)
   }
-  var orderList = ['Monitor', 'Basket Ball', 'Lantern', 'Top Hat', 'Battery', 'Dirt Block', 'Eagle', 'Anchor', 'Brick Wall', 'House', 'Chest', 'Pineapple', 'Wooden Crate', 'White Alien Standing', 'Brown Golem', 'Hexagonal Emerald',]
-  var newOTPnumbers = []
-  for (let k = 0; k < newOTP.length; k++) {
-    var temp = orderList.indexOf(newOTP[k])
-    newOTPnumbers.push(temp)
-  }
-  passwordController.OTPhandling(newOTPnumbers)
+  // passwordController.OTPhandling(newOTPnumbers)
   return newOTP
 }
