@@ -5,7 +5,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/mystyle.css">
+  <title>MFA prototype</title>
 </head>
 
 <body>
@@ -42,7 +46,11 @@
       sendbtn.addEventListener('click', async () => {
         await postGP('http://localhost:3000/graphical', { paswordNumbers: paswordNumbers })
       })
+      // document.querySelector('form').addEventListener('submit', async () => {
+      //           await postGP('http://localhost:3000/graphical', { paswordNumbers: paswordNumbers })
+      //       })
     })
+
 
     // overcomplicated removal for a selection
     function removeSelection(id) {
@@ -67,6 +75,7 @@
       const response = await fetch(url, data)
       // This if statement makes the redirect functional
       if (response.redirected) {
+        console.log('redirecting here ',response.url )
         window.location.href = response.url;
       }
       if (!response.ok) {
@@ -80,8 +89,14 @@
       return response
     }</script>
   <script onload="initGraphical()"></script>
+  <h1>SnowBeez Security</h1>
+  <div class="background">
+    <div class="shape"></div>
+    <div class="shape"></div>
+  </div>
+  <form>
+ <h4>Select your graphical tokens:</h4>
 
-  <h1>Graphical</h1>
   <div id="pictures">
     <div class="row">
       <img src="\graphicalImages\pixil-frame-0.png" id="0">
@@ -110,7 +125,12 @@
     </div>
   </div>
 
-  <button type="submit" id="sendGp">Send</button>
+  <button type="button" id="sendGp">Send</button>
+  <!-- <button type="submit" id="sendGp">Send</button> -->
+  <!-- <div><a href="/register">Register</a></div> -->
+  <div><a href="/register">Forgot your graphical password?</a></div>
+
+</form>
 
 </body>
 

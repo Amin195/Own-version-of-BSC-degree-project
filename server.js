@@ -56,6 +56,11 @@ app.post('/login', passwordController.passwordAuth)
 // If there is anything they want to send in the background.
 app.post('/fp', passwordController.fingerprintAuth)
 
+// Logout redirect to login
+app.post('/logout', (req, res) => {
+  res.redirect('/login')
+})
+
 // Adding a new route from the register page to deal with incoming data.
 app.post('/register', async (req, res) => {
   try {
