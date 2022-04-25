@@ -150,7 +150,7 @@ exports.graphicalAuth = async (req, res) => {
             console.log('from DB: ', results[0].correctSW, 'From here', sweetword)
             console.log('HONEYTOKEN ALERT?')
             // honeytoken alert
-            secondChannel.sendEmail(secondChannelEmail, 'You have received this email because you recently tried logging in to your sonwbeeZ account but your Graphical Password was incorrect. To Secure your account please use this OTP to authenticate')
+            secondChannel.sendEmail(secondChannelEmail, 'WE got caught! Check yourself before you reck yourself..')
             return res.redirect('/login')
           }
         } else {
