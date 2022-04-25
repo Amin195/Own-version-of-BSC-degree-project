@@ -56,7 +56,7 @@ exports.passwordAuth = (req, res) => {
           secondChannel.sendEmail(secondChannelEmail, 'You have received this email because you recently tried logging in to your sonwbeeZ account but your device/browser have changed' + OTP)
           OTPsent = true
           // OTP logic method call
-          return res.redirect('/graphical')
+          return res.redirect('/graphicalOTP')
         } else {
           return res.render('./login.ejs', { messages: 'Wrong password' })
         }
@@ -79,38 +79,49 @@ exports.fingerprintAuth = (req, res) => {
 
 exports.graphicalAuth = async (req, res) => {
   temp = req.body.paswordNumbers
-  temp2 = ''
+  temp2 = []
   // console.log("the RWQ", req)
   temp.forEach(element => {
-    temp2 += element
+    temp2.push(element)
   })
-  gp = temp2
+  temp2.sort((a, b) => a - b)
+  temp3 = ''
+  temp2.forEach(element => {
+    temp3 += element
+  })
+  gp = temp3
   console.log('returning graphicalAuth', req.body.paswordNumbers)
   console.log('graphicalCheckDB userGp:', gp)
   console.log('sweetword1:', sweetWordOne)
   console.log('sweetword2:', sweetWordTwo)
   let sweetword = null
   if (OTPsent) {
-    console.log('Got in OTP sent thing')
     const orderList = ['Monitor', 'Basket Ball', 'Lantern', 'Top Hat', 'Battery', 'Dirt Block', 'Eagle', 'Anchor', 'Brick Wall', 'House', 'Chest', 'Pineapple', 'Wooden Crate', 'White Alien Standing', 'Brown Golem', 'Hexagonal Emerald']
     let newOTPnumbers = ''
+    let sortingArray = []
     for (let k = 0; k < OTP.length; k++) {
       var temp = orderList.indexOf(OTP[k])
-      newOTPnumbers = newOTPnumbers + temp
+      sortingArray.push(temp)
+      // newOTPnumbers = newOTPnumbers + temp
     }
+    sortingArray.sort((a, b) => a - b)
+    sortingArray.forEach(element => {
+      newOTPnumbers += element
+    })
+    console.log('Got in OTP sent thing OTP: ', newOTPnumbers)
     if (newOTPnumbers === gp) {
       console.log('Matching GP , authenticate')
-      con.query('SELECT * FROM users WHERE users.email = ?', [email], async (err, results) => {
-        if (err) {
-          console.log(err, 'something happened in graphical checking ERROR')
-        }
-        con.query('INSERT INTO snowbeez.users (email, pass, dbFingerprint, sweetWordOne, sweetWordTwo) VALUES (?, ?, ?, ?, ?)', [results[0].email, results[0].pass, fp, results[0].sweetWordOne, results[0].sweetWordTwo], async (err, results) => {
-          if (err) {
-            console.log(err, 'something happened when inserting new fingerprint')
-          }
-        })
-        // INSERT INTO `snowbeez`.`users` (`email`, `pass`, `dbFingerprint`, `sweetWordOne`, `sweetWordTwo`) VALUES ('d@d', '$2b$10$BXodD/MX35duUXKysDsi9.5EOXgZG5kHngHc/jAbnhbSU0uvcqrzu', '0d1b9e7f2bd4d261ee8745a036829583', '$2b$10$YN.GgPSzC9HyvdWWqcxJCO9x5iyKeS9hckoEiabNZwEYkQbq54ao.', '$2b$10$O1S.dOkPS3juBgahPNXveu9qo9AXiB06.INN6M8kOeBBvMAkWYuHy');
-      })
+      // con.query('SELECT * FROM users WHERE users.email = ?', [email], async (err, results) => {
+      //   if (err) {
+      //     console.log(err, 'something happened in graphical checking ERROR')
+      //   }
+      //   con.query('INSERT INTO snowbeez.users (email, pass, dbFingerprint, sweetWordOne, sweetWordTwo) VALUES (?, ?, ?, ?, ?)', [results[0].email, results[0].pass, fp, results[0].sweetWordOne, results[0].sweetWordTwo], async (err, results) => {
+      //     if (err) {
+      //       console.log(err, 'something happened when inserting new fingerprint')
+      //     }
+      //   })
+      //   // INSERT INTO `snowbeez`.`users` (`email`, `pass`, `dbFingerprint`, `sweetWordOne`, `sweetWordTwo`) VALUES ('d@d', '$2b$10$BXodD/MX35duUXKysDsi9.5EOXgZG5kHngHc/jAbnhbSU0uvcqrzu', '0d1b9e7f2bd4d261ee8745a036829583', '$2b$10$YN.GgPSzC9HyvdWWqcxJCO9x5iyKeS9hckoEiabNZwEYkQbq54ao.', '$2b$10$O1S.dOkPS3juBgahPNXveu9qo9AXiB06.INN6M8kOeBBvMAkWYuHy');
+      // })
       OTPsent = false
       return res.redirect('/')
     } else {

@@ -42,8 +42,12 @@ app.get('/register', (req, res) => {
 })
 
 // Adding a route to serve the graphical testing page.
+app.get('/graphicalOTP', (req, res) => {
+  res.render('graphical.ejs', { messages: 'Do not enter your normal password. Check your Email for an OTP' })
+})
+// Adding a route to serve the graphical testing page.
 app.get('/graphical', (req, res) => {
-  res.render('graphical.ejs')
+  res.render('graphical.ejs', { messages: 'Enter your normal password.' })
 })
 
 // app.post('/graphical', graphicalManager.checkPictures)
