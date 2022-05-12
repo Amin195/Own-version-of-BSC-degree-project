@@ -16,9 +16,10 @@
     <!-- <script type="module" src="fingerprinting.js"></script>
     <script async src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script> -->
     <script>async function initFingerprintJS() {
+        
             const fp = await FingerprintJS.load()
             const result = await fp.get()
-
+            var start = window.performance.now()
             // Exclude a couple components
             const { audio, colorDepth, colorGamut, contrast, cookiesEnabled, cpuClass, deviceMemory, domBlockers, fontPreferences, fonts, forcedColors, hardwareConcurrency, hdr,
                 indexedDB, invertedColors, languages, localStorage, math, monochrome, openDatabase, osCpu, platform, plugins, reducedMotion, screenFrame, screenResolution, sessionStorage,
@@ -26,7 +27,9 @@
 
             // Make a visitor identifier from your custom list of components
             const visitorId = FingerprintJS.hashComponents(components)
+            var end = window.performance.now()
             console.log('visitorId:', visitorId)
+            console.log(`Execution time: ${end - start} ms`)
 
             document.querySelector('form').addEventListener('submit', async () => {
                 console.log('Visitor ID when submitting: ', visitorId)
